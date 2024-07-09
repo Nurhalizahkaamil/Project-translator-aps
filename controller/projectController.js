@@ -1,97 +1,93 @@
-const project = require("../db/models/project");
-const user = require("../db/models/user");
-const AppError = require("../utils/appError");
-const catchAsync = require("../utils/catchAsync");
-const { success } = require("../utils/response");
+const project = require('../db/models/project');
+const user = require('../db/models/user');
+const AppError = require('../utils/appError');
+const catchAsync = require('../utils/catchAsync');
+const { success } = require('../utils/response');
 
-const createProject = catchAsync(async (req, res, next) => {
-  const body = req.body;
-  const userId = req.user.id;
-  const newProject = await project.create({
-    title: body.title,
-    productImage: body.productImage,
-    price: body.price,
-    shortDescription: body.shortDescription,
-    description: body.description,
-    productUrl: body.productUrl,
-    category: body.category,
-    tags: body.tags,
-    createdBy: userId,
+class ProjectController {
+  static createProject = catchAsync(async (req, res, next) => {
+    const body = req.body;
+    const userId = req.user.id;
+    const newProject = await project.create({
+      title: body.title,
+      productImage: body.productImage,
+      price: body.price,
+      shortDescription: body.shortDescription,
+      description: body.description,
+      productUrl: body.productUrl,
+      category: body.category,
+      tags: body.tags,
+      createdBy: userId,
+    });
+
+    if (!newProject) {
+      return next(new AppError('Failed to create the project', 400));
+    }
+
+    return success(res, newProject, 'Project created');
   });
 
-  if (!newProject) {
-    return next(new AppError("Failed to create the project", 400));
-  }
+  static getAllProject = catchAsync(async (req, res, next) => {
+    const userId = req.user.id;
+    const result = await project.findAll({
+      include: user,
+      where: { createdBy: userId },
+    });
 
-  return success(res, newProject, "Project created");
-});
+    if (!result) {
+      return next(new AppError('Data not found', 404));
+    }
 
-const getAllProject = catchAsync(async (req, res, next) => {
-  const userId = req.user.id;
-  const result = await project.findAll({
-    include: user,
-    where: { createdBy: userId },
+    return success(res, result, 'Project found');
   });
 
-  if (!result) {
-    return next(new AppError("Data not found", 404));
-  }
+  static getProjectById = catchAsync(async (req, res, next) => {
+    const projectId = req.params.id;
+    const result = await project.findByPk(projectId, {
+      include: user,
+    });
 
-  return success(res, result, "Project found");
-});
+    if (!result) {
+      return next(new AppError('Project ID not found', 404));
+    }
 
-const getProjectById = catchAsync(async (req, res, next) => {
-  const projectId = req.params.id;
-  const result = await project.findByPk(projectId, {
-    include: user,
+    return success(res, result, 'Project found');
   });
 
-  if (!result) {
-    return next(new AppError("Project ID not found", 404));
-  }
+  static updateProject = catchAsync(async (req, res, next) => {
+    const userId = req.user.id;
+    const projectId = req.params.id;
+    const body = req.body;
 
-  return success(res, result, "Project found");
-});
+    const result = await project.findOne({
+      where: { id: projectId, createdBy: userId },
+    });
 
-const updateProject = catchAsync(async (req, res, next) => {
-  const userId = req.user.id;
-  const projectId = req.params.id;
-  const body = req.body;
+    if (!result) {
+      return next(new AppError('Invalid project id', 400));
+    }
 
-  const result = await project.findOne({
-    where: { id: projectId, createdBy: userId },
+    const updateResult = await result.update(body);
+
+    return success(res, updateResult, 'Project updated');
   });
 
-  if (!result) {
-    return next(new AppError("Invalid project id", 400));
-  }
+  static deleteProject = catchAsync(async (req, res, next) => {
+    const userId = req.user.id;
+    const projectId = req.params.id;
 
-  const updateResult = await result.update(body);
+    const result = await project.findOne({
+      where: { id: projectId, createdBy: userId },
+    });
 
-  return success(res, updateResult, "Project updated");
-});
+    if (!result) {
+      return next(new AppError('Invalid project id', 400));
+    }
 
-const deleteProject = catchAsync(async (req, res, next) => {
-  const userId = req.user.id;
-  const projectId = req.params.id;
+    await result.destroy();
 
-  const result = await project.findOne({
-    where: { id: projectId, createdBy: userId },
+    return success(res, null, 'Data Successfully Deleted');
   });
+}
 
-  if (!result) {
-    return next(new AppError("Invalid project id", 400));
-  }
-
-  await result.destroy();
-
-  return success(res, null, "Data Successfully Deleted");
-});
-
-module.exports = {
-  createProject,
-  getAllProject,
-  getProjectById,
-  updateProject,
-  deleteProject,
-};
+module.exports = { ProjectController };
