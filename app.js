@@ -14,7 +14,6 @@ const mainRouter = require('./routes/index');
 app.use('/api/v1', mainRouter);
 
 // Set up Swagger UI
-// Set up Swagger UI
 app.use('/api/v1/docs', 
   swaggerUi.serve, 
   swaggerUi.setup(swaggerSpec, {
