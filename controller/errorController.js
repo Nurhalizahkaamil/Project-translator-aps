@@ -26,14 +26,14 @@ const sendErrorProd = (error, res) => {
         });
     }
 
-    console.log(error.name, error.message, stack);
+    console.error(error.name, error.message, stack); // Log the error for debugging in production
     return res.status(500).json({
         status: 'error',
         message: 'Something went very wrong',
     });
 };
 
-const globalErrorHandler = (err, req, res, next) => {
+const globalErrorHandler = (err, _req, res, _next) => {
     if (err.name === 'JsonWebTokenError') {
         err = new AppError('Invalid token', 401);
     }
@@ -41,7 +41,7 @@ const globalErrorHandler = (err, req, res, next) => {
         err = new AppError(err.errors[0].message, 400);
     }
     if (err.name === 'SequelizeUniqueConstraintError') {
-        err = new AppError(err.errors[0].message, 400);
+        err = new AppError(err.errors[0].message, 400); // Handle SequelizeUniqueConstraintError
     }
     if (process.env.NODE_ENV === 'development') {
         return sendErrorDev(err, res);

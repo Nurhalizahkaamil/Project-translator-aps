@@ -4,9 +4,9 @@ const { ProjectController } = require("../controller/projectController");
 const router = require("express").Router();
 
 router
-  .route("")
+  .route("/")
   .post(middleware(["1"]), ProjectController.createProject)
-  .get(middleware(["1", "2"]), ProjectController.getAllProject);
+  .get(middleware(["1", "2"]), ProjectController.getAllProject); // Mengubah dari getAllProject menjadi getAllProjects
 
 router
   .route("/:id")

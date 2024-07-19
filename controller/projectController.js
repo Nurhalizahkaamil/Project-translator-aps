@@ -7,7 +7,6 @@ const { success } = require('../utils/response');
 class ProjectController {
   static createProject = catchAsync(async (req, res, next) => {
     const body = req.body;
-    const userId = req.user.id;
     const newProject = await project.create({
       title: body.title,
       productImage: body.productImage,
@@ -17,7 +16,6 @@ class ProjectController {
       productUrl: body.productUrl,
       category: body.category,
       tags: body.tags,
-      createdBy: userId,
     });
 
     if (!newProject) {
@@ -28,10 +26,8 @@ class ProjectController {
   });
 
   static getAllProject = catchAsync(async (req, res, next) => {
-    const userId = req.user.id;
     const result = await project.findAll({
       include: user,
-      where: { createdBy: userId },
     });
 
     if (!result) {
@@ -55,12 +51,11 @@ class ProjectController {
   });
 
   static updateProject = catchAsync(async (req, res, next) => {
-    const userId = req.user.id;
     const projectId = req.params.id;
     const body = req.body;
 
     const result = await project.findOne({
-      where: { id: projectId, createdBy: userId },
+      where: { id: projectId },
     });
 
     if (!result) {
@@ -73,11 +68,10 @@ class ProjectController {
   });
 
   static deleteProject = catchAsync(async (req, res, next) => {
-    const userId = req.user.id;
     const projectId = req.params.id;
 
     const result = await project.findOne({
-      where: { id: projectId, createdBy: userId },
+      where: { id: projectId },
     });
 
     if (!result) {

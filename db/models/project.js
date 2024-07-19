@@ -111,13 +111,6 @@ module.exports = sequelize.define(
                 },
             },
         },
-        createdBy: {
-            type: DataTypes.INTEGER,
-            references: {
-                model: 'user',
-                key: 'id',
-            },
-        },
         createdAt: {
             allowNull: false,
             type: DataTypes.DATE,

@@ -44,14 +44,6 @@ module.exports = {
             tags: {
                 type: Sequelize.ARRAY(Sequelize.STRING),
             },
-            createdBy: {
-                type: Sequelize.INTEGER,
-                allowNull: true,
-                references: {
-                    model: 'user',
-                    key: 'id',
-                },
-            },
             createdAt: {
                 allowNull: false,
                 type: Sequelize.DATE,

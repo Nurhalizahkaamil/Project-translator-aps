@@ -1,7 +1,6 @@
 'use strict';
 const { Model, Sequelize, DataTypes } = require('sequelize');
 const bcrypt = require('bcrypt');
-
 const sequelize = require('../../config/database');
 const AppError = require('../../utils/appError');
 const project = require('./project');
@@ -83,7 +82,7 @@ const user = sequelize.define(
             set(value) {
                 if (this.password.length < 7) {
                     throw new AppError(
-                        'Password length must be grater than 7',
+                        'Password length must be greater than 7',
                         400
                     );
                 }
@@ -117,9 +116,5 @@ const user = sequelize.define(
     }
 );
 
-user.hasMany(project, { foreignKey: 'createdBy' });
-project.belongsTo(user, {
-    foreignKey: 'createdBy',
-});
 
 module.exports = user;

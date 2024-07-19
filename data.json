@@ -1,0 +1,42 @@
+{
+  "username": {
+    "en": "Username",
+    "id": "nama"
+  },
+  "password": {
+    "id": "Kata Sandi",
+    "en": "password"
+  },
+  "email": {
+    "en": "Email",
+    "id": "surel"
+  },
+  "white": {
+    "en": "white",
+    "id": "putih"
+  },
+  "black": {
+    "en": "black",
+    "id": "hitam"
+  },
+  "hp": {
+    "en": "hp",
+    "id": "telfon"
+  },
+  "what": {
+    "en": "what",
+    "id": "apa"
+  },
+  "purple": {
+    "en": "purple",
+    "id": "ungu"
+  },
+  "brown": {
+    "en": "brown",
+    "id": "cokelat"
+  },
+  "why": {
+    "en": "why",
+    "id": "kenapa"
+  }
+}
